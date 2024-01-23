@@ -23,6 +23,7 @@ async function run() {
     // Connect the client to the server	(optional starting in v4.7)
     // await client.connect();
     const DataCollection = client.db("task-db").collection("property-all");
+    const UsersCollection = client.db("task-db").collection("users");
    
 app.get("/allData", async (req, res) => {
     const result = await DataCollection.find().toArray();
@@ -42,6 +43,30 @@ app.get("/allData", async (req, res) => {
     const result = await DataCollection.insertOne(newJobs);
     res.send(result);
   });
+  app.get("/api/v1/users", async (req, res) => {
+    const userEmail = req.query.email;
+    const query = { email: userEmail };
+    const isUserExist = await UsersCollection.findOne(query);
+    if(isUserExist){
+      return res.send(isUserExist)
+    } else {
+      res.status(400).json({ message: "not found" });
+    }
+  });
+
+  app.post("/api/v1/users", async(req,res) => {
+    const user = req.body;
+    const query = { email: user.email };
+    const isUserExist = await UsersCollection.findOne(query);
+    if(isUserExist){
+      return res.status(400).json({ message: "Data already exists" });
+    }
+    else {
+      const result = await UsersCollection.insertOne(user);
+      res.send(result);
+    }
+  });
+
   app.delete("/home/:id", async (req, res) => {
     const id = req.params.id;
     const query = { _id: new ObjectId(id) };
