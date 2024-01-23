@@ -29,10 +29,47 @@ app.get("/allData", async (req, res) => {
     res.send(result);
   }); 
 
-  app.get("/countriesDetails/:id", async (req, res) => {
+  app.get("/allData/:id", async (req, res) => {
     const id = req.params.id;
     const query = { _id: new ObjectId(id) };
     const result = await DataCollection.findOne(query);
+    res.send(result);
+  });
+
+  app.post("/homes", async (req, res) => {
+    const newJobs = req.body;
+    console.log(newJobs);
+    const result = await DataCollection.insertOne(newJobs);
+    res.send(result);
+  });
+  app.delete("/home/:id", async (req, res) => {
+    const id = req.params.id;
+    const query = { _id: new ObjectId(id) };
+    const result = await DataCollection.deleteOne(query);
+    res.send(result);
+  });
+  app.put("/homeUpdated/:id", async (req, res) => {
+    const id = req.params.id;
+    const filter = { _id: new ObjectId(id) };
+    const option = { upsert: true };
+    const HomeUpdate = req.body;
+    const update = {
+      $set: {
+        name: HomeUpdate.name,
+        address: HomeUpdate.address,
+        phoneNumber: HomeUpdate.phoneNumber,
+        city: HomeUpdate.city,
+        description: HomeUpdate.description,
+        bedrooms: HomeUpdate.bedrooms,
+        bathrooms: HomeUpdate. bathrooms,
+        room_size: HomeUpdate.room_size,
+        picture: HomeUpdate.picture,
+        availability_date: HomeUpdate.availability_date,
+        rent_per_month: HomeUpdate.rent_per_month,
+       
+      },
+    };
+    const result = await DataCollection.updateOne(filter, update, option);
     res.send(result);
   });
 
