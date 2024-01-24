@@ -29,6 +29,10 @@ app.get("/allData", async (req, res) => {
     const result = await DataCollection.find().toArray();
     res.send(result);
   }); 
+app.get("/users", async (req, res) => {
+    const result = await UsersCollection.find().toArray();
+    res.send(result);
+  }); 
 
   app.get("/allData/:id", async (req, res) => {
     const id = req.params.id;
